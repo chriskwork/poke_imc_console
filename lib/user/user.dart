@@ -30,9 +30,10 @@ class User {
       if (await file.exists()) {
         final content = await file.readAsString();
         final userData = jsonDecode(content);
-        print('=== ¡Hola ${userData['name']}! ===');
+        print(
+            '=== ¡Hola ${userData['name']}! Qué alegría de verte otra vez. ===');
       } else {
-        print('¡Bienvenid@! Por favor, registrate primero.');
+        print('=== ¡Bienvenid@! Por favor, registrate primero. === \n');
 
         String name, password;
 
@@ -56,8 +57,7 @@ class User {
 
         print('''
 
-### ¡Bien hecho $name!, Vamos a empezar. 🙌
-''');
+### ¡Bien hecho $name!, Vamos a empezar. 🙌''');
       }
     } catch (e) {
       print('error');
@@ -69,6 +69,6 @@ class User {
     final file = File('user.json');
     await file.delete();
 
-    print('Tus datos están borrado.');
+    print('### Tu dato está borrado.');
   }
 }
