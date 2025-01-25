@@ -15,12 +15,12 @@ class User {
   }
 
 // Getter
-  String get name => _name;
-  String get password => _password;
+  String get getName => _name;
+  String get getPassword => _password;
 
 // Setter
-  set name(String name) => _name = name;
-  set password(String password) => _password = password;
+  set setName(String name) => _name = name;
+  set setPassword(String password) => _password = password;
 
 // Check la existencia de usuario, si es nuevo usuario, guardar el archivo.
   static Future<void> checkUser() async {
@@ -50,8 +50,8 @@ class User {
         User newUser = User(name, password);
 
         await file.writeAsString(jsonEncode({
-          'name': newUser.name,
-          'password': newUser.password,
+          'name': newUser.getName,
+          'password': newUser.getPassword,
         }));
 
         print('''

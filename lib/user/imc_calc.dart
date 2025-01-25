@@ -15,14 +15,14 @@ class ImcCalculator {
   double get height => _height;
   double get weight => _weight;
 
-  set height(double height) => _height = height;
-  set weight(double weight) => _weight = weight;
+  set setHeight(double height) => _height = height;
+  set setWeight(double weight) => _weight = weight;
 
   void getUserInfo() {
     // Obtener la altura de usuario
     do {
       stdout.write('Introduce tu Altura(cm): ');
-      height = double.parse(
+      setHeight = double.parse(
         // Cambiar , a . para evitar error
         stdin.readLineSync()!.trim().replaceAll(',', '.'),
       );
@@ -31,7 +31,7 @@ class ImcCalculator {
     // Obtener el pero de usuario
     do {
       stdout.write('Introduce tu Peso(kg): ');
-      weight = double.parse(
+      setWeight = double.parse(
         stdin.readLineSync()!.trim().replaceAll(',', '.'),
       );
       weight.toStringAsFixed(1);
