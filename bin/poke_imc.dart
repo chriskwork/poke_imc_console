@@ -32,7 +32,7 @@ void showCommand() {
 ### COMANDOS 👇
 ### Ver IMC de pokemon(Buscar con el nombre): --b
 ### Calcular mi IMC: --imc
-### Borrar mis datos: --borrar
+### Borrar mis datos
 ### Salir: --s
 
   ''');
