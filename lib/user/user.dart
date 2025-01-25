@@ -1,12 +1,9 @@
 import 'dart:io';
+import 'dart:convert';
 
 // Clase de Usuario
 class User {
-  final List<Map<String, dynamic>> users = [];
-  bool isLogin = false;
-
-  late String _name;
-  late String _password;
+  late String _name, _password;
 
 // Constructor
   User(
@@ -25,32 +22,53 @@ class User {
   set name(String name) => _name = name;
   set password(String password) => _password = password;
 
-  void who() {
-    print("Name: $name, Pwd: $password");
+// Check la existencia de usuario, si es nuevo usuario, guardar el archivo.
+  static Future<void> checkUser() async {
+    final file = File('user.json');
+
+    try {
+      if (await file.exists()) {
+        final content = await file.readAsString();
+        final userData = jsonDecode(content);
+        print('=== ¡Hola ${userData['name']}! ===');
+      } else {
+        print('¡Bienvenid@! Por favor, registrate primero.');
+
+        String name, password;
+
+        do {
+          stdout.write('Tu nombre(solo letras y números) : ');
+          name = stdin.readLineSync()!.trim();
+        } while (!RegExp(r'^[a-zA-Z0-9]+$').hasMatch(name));
+
+        do {
+          stdout.write('Contraseña : ');
+          password = stdin.readLineSync()!.trim();
+        } while (password.isEmpty);
+
+        // Crear nuevo usuario y guardar su dato
+        User newUser = User(name, password);
+
+        await file.writeAsString(jsonEncode({
+          'name': newUser.name,
+          'password': newUser.password,
+        }));
+
+        print('''
+
+### ¡Bien hecho $name!, Vamos a empezar. 🙌
+''');
+      }
+    } catch (e) {
+      print('error');
+    }
   }
 
-// Registarse
-  void signUp() {
-    // Crear el nombre de usuario
-    do {
-      stdout.write('Nombre: ');
-      name = stdin.readLineSync()!.trim();
-    } while (name == '');
-    // Crear la contraseña de usuario
-    do {
-      stdout.write('Contraseña: ');
-      password = stdin.readLineSync()!.trim();
-    } while (password == '');
+  // Borrar los datos de usuario para el test, o resetear la contraseña.
+  static Future<void> deleteUserData() async {
+    final file = File('user.json');
+    await file.delete();
 
-    // Crear nuevo usuario
-    Map<String, dynamic> newUser = {
-      'name': name,
-      'password': password,
-    };
-
-    // Añadir nuevo usuario a la lista
-    users.add(newUser);
+    print('Tus datos están borrado.');
   }
-
-  void logIn(String name, String password) {}
 }

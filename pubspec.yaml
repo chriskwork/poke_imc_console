@@ -1,15 +1,17 @@
 name: poke_imc_console
-description: A sample command-line application.
+description: Un pequeño 'command-line application' sobre IMC y los pokemons.
 version: 1.0.0
-# repository: https://github.com/my_org/my_repo
+# repository: https://github.com/chriskwork/poke_imc_console.git
 
 environment:
-  sdk: ^3.6.0
+    sdk: ^3.6.0
 
 # Add regular dependencies here.
 dependencies:
-  # path: ^1.8.0
+    convert: ^3.1.2
+    shared_preferences: ^2.4.0
+    # path: ^1.8.0
 
 dev_dependencies:
-  lints: ^5.0.0
-  test: ^1.24.0
+    lints: ^5.0.0
+    test: ^1.24.0
