@@ -12,37 +12,37 @@ class ImcCalculator {
     _weight = weight;
   }
 
-  double get height => _height;
-  double get weight => _weight;
+  double get getHeight => _height;
+  double get getWeight => _weight;
 
   set setHeight(double height) => _height = height;
   set setWeight(double weight) => _weight = weight;
 
-  void getUserInfo() {
+  static void getMyImc() {
+    double height, weight;
+
     // Obtener la altura de usuario
     do {
       stdout.write('Introduce tu Altura(cm): ');
-      setHeight = double.parse(
+      height = double.parse(
         // Cambiar , a . para evitar error
         stdin.readLineSync()!.trim().replaceAll(',', '.'),
       );
-      height.toStringAsFixed(1);
+      height = height / 100;
     } while (height <= 0);
+
     // Obtener el pero de usuario
     do {
       stdout.write('Introduce tu Peso(kg): ');
-      setWeight = double.parse(
+      weight = double.parse(
         stdin.readLineSync()!.trim().replaceAll(',', '.'),
       );
       weight.toStringAsFixed(1);
     } while (weight <= 0);
-  }
 
-  void checkMyInfo() {
-    print('Altura: $height, Peso: $weight');
-  }
+    ImcCalculator userInfo = ImcCalculator(height, weight);
 
-  void getMyImc() {
-    print('');
+    print(
+        'Tu IMC es ${(userInfo.getWeight / (userInfo.getHeight * userInfo.getHeight)).toStringAsFixed(1)}');
   }
 }

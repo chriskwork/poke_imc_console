@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:poke_imc_console/user/imc_calc.dart';
 import 'package:poke_imc_console/user/user.dart';
 
 String? command;
@@ -85,6 +86,7 @@ void exeCommand(String command) {
       break;
     case '--imc':
       print('Calcular mi IMC');
+      ImcCalculator.getMyImc();
       break;
     case '--s':
       print('''
