@@ -54,7 +54,7 @@ class ImcCalculator {
 
     if (imc_result < 18.5) {
       imc_status = 'bajo peso';
-      print(imc_status);
+      print('Tu IMC es $imc_status, (Bajo peso)');
     } else if (imc_result < 22.9) {
       imc_status = 'normal';
       print(imc_status);
