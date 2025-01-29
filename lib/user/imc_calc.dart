@@ -12,12 +12,13 @@ class ImcCalculator {
     _weight = weight;
   }
 
-  double get getHeight => _height;
-  double get getWeight => _weight;
+  double get height => _height;
+  double get weight => _weight;
 
-  set setHeight(double height) => _height = height;
-  set setWeight(double weight) => _weight = weight;
+  set height(double height) => _height = height;
+  set weight(double weight) => _weight = weight;
 
+// Obtener la informacion y calcular IMC
   static void getMyImc() {
     double height, weight;
 
@@ -42,7 +43,27 @@ class ImcCalculator {
 
     ImcCalculator userInfo = ImcCalculator(height, weight);
 
-    print(
-        'Tu IMC es ${(userInfo.getWeight / (userInfo.getHeight * userInfo.getHeight)).toStringAsFixed(1)}');
+    double imc_result = userInfo.weight / (userInfo.height * userInfo.height);
+    String imc_status = '';
+
+    // IMC Rango:
+    // < 18.5 (bajo peso)
+    // 18.5 - 22.9 (normal)
+    // 23 - 24.9 (sobrepeso)
+    // >= 25 (obesidad)
+
+    if (imc_result < 18.5) {
+      imc_status = 'bajo peso';
+      print(imc_status);
+    } else if (imc_result < 22.9) {
+      imc_status = 'normal';
+      print(imc_status);
+    } else if (imc_result < 24.9) {
+      imc_status = 'sobrepeso';
+      print(imc_status);
+    } else {
+      imc_status = 'obesidad';
+      print(imc_status);
+    }
   }
 }
