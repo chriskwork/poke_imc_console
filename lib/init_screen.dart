@@ -11,11 +11,13 @@ void showCommand() {
 
   print('''
 
-### C O M A N D O S 👇
-### Ver IMC de pokemon(Buscar con el nombre): --b
-### Calcular mi IMC: --imc
-### Borrar mis datos: --borrar
-### Salir: --s
+### C O M A N D O S 👇 ###
+-> Login/Logout: --login/--logout
+-> Ver IMC de pokemon(Buscar con el nombre): --b
+-> Ver IMC de pokemon al azar: --a
+-> Calcular mi IMC: --imc
+-> Borrar mis datos: --borrar
+-> Salir: --s
 
   ''');
 
@@ -34,8 +36,15 @@ void showCommand() {
 // Ejecutar el comando
 void exeCommand(String command) {
   switch (command) {
+    case '--login':
+      break;
+    case '--logout':
+      break;
     case '--b':
       print('\n 🔍 Buscar IMC del pokemon por nombre \n');
+      break;
+    case '--a':
+      print('\n 🎲 Ver IMC del pokemon al azar \n');
       break;
     case '--imc':
       print('\n 🍎 Calcular mi IMC \n');
