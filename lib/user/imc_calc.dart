@@ -1,5 +1,7 @@
 import 'dart:io';
 
+import 'package:poke_imc_console/init_screen.dart';
+
 class ImcCalculator {
   late double _height;
   late double _weight;
@@ -19,7 +21,7 @@ class ImcCalculator {
   set weight(double weight) => _weight = weight;
 
 // Obtener la informacion y calcular IMC
-  static void getMyImc() {
+  static String getMyImc() {
     double height, weight;
 
     // Obtener la altura de usuario
@@ -53,17 +55,25 @@ class ImcCalculator {
     // >= 25 (obesidad)
 
     if (imc_result < 18.5) {
-      imc_status = 'bajo peso';
-      print('Tu IMC es $imc_status, (Bajo peso)');
+      print('$imc_status : Bajo Peso');
+      showCommand();
     } else if (imc_result < 22.9) {
-      imc_status = 'normal';
-      print(imc_status);
+      print('$imc_status : Normal');
+      showCommand();
     } else if (imc_result < 24.9) {
-      imc_status = 'sobrepeso';
-      print(imc_status);
+      print('$imc_status : Sobrepeso');
+      showCommand();
     } else {
-      imc_status = 'obesidad';
-      print(imc_status);
+      print('$imc_status : OBESIDAD');
+      showCommand();
     }
+
+    String imc_message = '''
+    
+-> 📊 Tu IMC es ${imc_result.toStringAsFixed(1)} : $imc_status
+
+''';
+
+    return imc_message;
   }
 }

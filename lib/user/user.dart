@@ -57,7 +57,11 @@ class User {
 
         print('''
 
-### ¡Bien hecho $name!, Vamos a empezar. 🙌''');
+### 
+¡Bien hecho $name!,
+Te recordaré hasta que uses '--borrar' comando. 
+Vamos a empezar. 🙌
+###''');
       }
     } catch (e) {
       print('error');
