@@ -6,6 +6,7 @@ class User {
   final int age;
   double _height;
   double _weight;
+  final double _imc;
 
   // Constructor
   User({
@@ -15,13 +16,16 @@ class User {
     required this.age,
     required double height,
     required double weight,
+    required double imc,
   })  : _password = password,
         _height = height,
-        _weight = weight;
+        _weight = weight,
+        _imc = imc;
 
   // Getter
   double get height => _height;
   double get weight => _weight;
+  double get imc => _imc;
 
   // Setter
   set height(double value) {
@@ -39,6 +43,8 @@ class User {
       throw Exception('El peso tiene que ser mayor que 0');
     }
   }
+
+  set imc(double value) {}
 
   // Verificar la contraseña
   bool verifyPassword(String inputPassword) {
@@ -60,7 +66,7 @@ class User {
   // Calcular el IMC de usuario
   double imcCalculator() {
     double userImc = _weight / ((_height / 100) * (_height / 100));
-    return userImc;
+    return double.parse(userImc.toStringAsFixed(1));
   }
 
   // Map data de usuario para el BBDD.
@@ -71,6 +77,7 @@ class User {
       'age': age,
       'height': _height,
       'weight': _weight,
+      'imc': _imc,
     };
   }
 }
