@@ -1,78 +1,76 @@
-import 'dart:io';
-import 'dart:convert';
-
-// Clase de Usuario
+// User model
 class User {
-  late String _name, _password;
+  final int? id;
+  final String username;
+  final String _password;
+  final int age;
+  double _height;
+  double _weight;
 
-// Constructor
-  User(
-    String name,
-    String password,
-  ) {
-    _name = name;
-    _password = password;
-  }
+  // Constructor
+  User({
+    this.id,
+    required this.username,
+    required String password,
+    required this.age,
+    required double height,
+    required double weight,
+  })  : _password = password,
+        _height = height,
+        _weight = weight;
 
-// Getter
-  String get getName => _name;
-  String get getPassword => _password;
+  // Getter
+  double get height => _height;
+  double get weight => _weight;
 
-// Setter
-  set setName(String name) => _name = name;
-  set setPassword(String password) => _password = password;
-
-// Check la existencia de usuario, si es nuevo usuario, guardar el archivo.
-  static Future<void> checkUser() async {
-    final file = File('user.json');
-
-    try {
-      if (await file.exists()) {
-        final content = await file.readAsString();
-        final userData = jsonDecode(content);
-        print(
-            '=== ¡Hola ${userData['name']}! Qué alegría de verte otra vez. ===');
-      } else {
-        print('=== ¡Bienvenid@! Por favor, registrate primero. === \n');
-
-        String name, password;
-
-        do {
-          stdout.write('Tu nombre(solo letras y números) : ');
-          name = stdin.readLineSync()!.trim();
-        } while (!RegExp(r'^[a-zA-Z0-9]+$').hasMatch(name));
-
-        do {
-          stdout.write('Contraseña : ');
-          password = stdin.readLineSync()!.trim();
-        } while (password.isEmpty);
-
-        // Crear nuevo usuario y guardar su dato
-        User newUser = User(name, password);
-
-        await file.writeAsString(jsonEncode({
-          'name': newUser.getName,
-          'password': newUser.getPassword,
-        }));
-
-        print('''
-
-### 
-¡Bien hecho $name!,
-Te recordaré hasta que uses '--borrar' comando. 
-Vamos a empezar. 🙌
-###''');
-      }
-    } catch (e) {
-      print('error');
+  // Setter
+  set height(double value) {
+    if (value > 0) {
+      _height = value;
+    } else {
+      throw Exception('La altura tiene que ser mayor que 0');
     }
   }
 
-  // Borrar los datos de usuario para el test, o resetear la contraseña.
-  static Future<void> deleteUserData() async {
-    final file = File('user.json');
-    await file.delete();
+  set weight(double value) {
+    if (value > 0) {
+      _weight = weight;
+    } else {
+      throw Exception('El peso tiene que ser mayor que 0');
+    }
+  }
 
-    print('### Tu dato está borrado.');
+  // Verificar la contraseña
+  bool verifyPassword(String inputPassword) {
+    return _password == inputPassword;
+  }
+
+  // Actualizar la contraseña
+  void updatePassword(
+    String oldPassword,
+    String newPassword,
+  ) {
+    if (verifyPassword(oldPassword)) {
+      _password == newPassword;
+    } else {
+      throw Exception('La contraseña incorrecta.');
+    }
+  }
+
+  // Calcular el IMC de usuario
+  double imcCalculator() {
+    double userImc = _weight / ((_height / 100) * (_height / 100));
+    return userImc;
+  }
+
+  // Map data de usuario para el BBDD.
+  Map<String, dynamic> userMap() {
+    return {
+      'username': username,
+      'password': _password,
+      'age': age,
+      'height': _height,
+      'weight': _weight,
+    };
   }
 }
