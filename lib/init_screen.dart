@@ -1,11 +1,10 @@
 import 'dart:io';
-import 'package:poke_imc_console/user/imc_calc.dart';
-import 'package:poke_imc_console/user/user.dart';
+import 'package:pokemon_trainer_fitness_app/user/imc_calc.dart';
 
 String? command;
 
 // Mostrar los comandos
-void showCommand() {
+void showMainMenu() {
   // Inicializar el comando
   command = null;
 
@@ -58,10 +57,9 @@ void exeCommand(String command) {
   ''');
       break;
     case '--borrar':
-      User.deleteUserData();
       break;
     default:
       print('Comando incorrecto. Reintenta por favor.');
-      showCommand();
+      showMainMenu();
   }
 }

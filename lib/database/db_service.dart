@@ -1,6 +1,7 @@
 import 'package:mysql1/mysql1.dart';
 import 'dart:async';
 import 'package:pokemon_trainer_fitness_app/database/db_config.dart';
+import 'package:pokemon_trainer_fitness_app/user/user.dart';
 
 class DatabaseService {
   late MySqlConnection conn;
@@ -16,7 +17,7 @@ class DatabaseService {
 
     // Intentar a Crear el BD si no existe.
     // Primnero se conecta con setting temporal,
-    // y luego crea el BD que vamos a gardar datos.
+    // y luego crea el BD(pokemon_imc) que vamos a gardar datos.
     try {
       final tempConn = await MySqlConnection.connect(tempSettings);
       await tempConn.query('CREATE DATABASE IF NOT EXISTS pokemon_imc');
@@ -75,8 +76,45 @@ class DatabaseService {
         pokemon_name varchar(50) NOT NULL,
         height decimal(5,2) NOT NULL,
         weight decimal(5,2) NOT NULL,
-        imc decimal(3,1) NOT NULL,
+        imc decimal(3,1) NOT NULL
         
       )''');
+  }
+
+  Future<User?> loginUser(String username, String password) async {
+    var results = await conn.query(
+      'SELECT username, password FROM trainer WHERE username = ? AND password = ?',
+      [username, password],
+    );
+
+    if (results.isNotEmpty) {
+      var row = results.first;
+      return User(
+        username: row['username'],
+        password: row['password'],
+        age: row['age'],
+        height: row['height'],
+        weight: row['weight'],
+        imc: row['imc'],
+      );
+    }
+    return null;
+  }
+
+  Future<bool> registerUser(User user) async {
+    try {
+      Map<String, dynamic> userData = user.userMap();
+
+      await conn.query(
+          'INSERT INTO trainer(\'username, password, age\') VALUES (?, ?, ?)', [
+        userData['username'],
+        userData['password'],
+        userData['age'],
+      ]);
+      return true;
+    } catch (e) {
+      print('Error: registrar el trainer $e');
+      return false;
+    }
   }
 }
