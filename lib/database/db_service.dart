@@ -26,10 +26,12 @@ class DatabaseService {
       // Conectar a BD de la App.
       conn = await MySqlConnection.connect(DatabaseConfig.settings);
 
-      // Iniciar tablas
+      // Iniciar tablas (Crear las tablas si no existen)
       _initialTables();
     } catch (e) {
       print('Error: Problema con el BD, $e');
+    } finally {
+      await conn.close();
     }
   }
 
@@ -40,7 +42,6 @@ class DatabaseService {
         trainer_id int NOT NULL AUTO_INCREMENT PRIMARY KEY,
         username varchar(50) NOT NULL,
         password varchar(50) NOT NULL,
-        age int NOT NULL,
         created_at timestamp DEFAULT CURRENT_TIMESTAMP
       )''');
 
@@ -77,7 +78,6 @@ class DatabaseService {
         height decimal(5,2) NOT NULL,
         weight decimal(5,2) NOT NULL,
         imc decimal(3,1) NOT NULL
-        
       )''');
   }
 
@@ -92,29 +92,11 @@ class DatabaseService {
       return User(
         username: row['username'],
         password: row['password'],
-        age: row['age'],
         height: row['height'],
         weight: row['weight'],
         imc: row['imc'],
       );
     }
     return null;
-  }
-
-  Future<bool> registerUser(User user) async {
-    try {
-      Map<String, dynamic> userData = user.userMap();
-
-      await conn.query(
-          'INSERT INTO trainer(\'username, password, age\') VALUES (?, ?, ?)', [
-        userData['username'],
-        userData['password'],
-        userData['age'],
-      ]);
-      return true;
-    } catch (e) {
-      print('Error: registrar el trainer $e');
-      return false;
-    }
   }
 }

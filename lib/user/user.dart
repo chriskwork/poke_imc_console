@@ -3,7 +3,6 @@ class User {
   final int? id;
   final String username;
   final String _password;
-  final int age;
   double _height;
   double _weight;
   final double _imc;
@@ -13,7 +12,6 @@ class User {
     this.id,
     required this.username,
     required String password,
-    required this.age,
     required double height,
     required double weight,
     required double imc,
@@ -74,7 +72,6 @@ class User {
     return {
       'username': username,
       'password': _password,
-      'age': age,
       'height': _height,
       'weight': _weight,
       'imc': _imc,
