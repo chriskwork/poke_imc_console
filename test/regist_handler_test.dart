@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:mysql1/mysql1.dart';
 import 'package:pokemon_trainer_fitness_app/database/db_service.dart';
 import 'package:pokemon_trainer_fitness_app/user/user.dart';
 
@@ -82,7 +83,7 @@ class UserRegistHandler {
   // Registrar nuevo user a los BBDD
   Future<void> newUserRegister() async {
     try {
-      await _db.connect();
+      // await _db.connect();
 
       final user = await newUserRegistInput();
       print(user);

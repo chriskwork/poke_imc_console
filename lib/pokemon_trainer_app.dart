@@ -1,28 +1,5 @@
-import 'package:pokemon_trainer_fitness_app/database/db_service.dart';
-import 'package:pokemon_trainer_fitness_app/user/user.dart';
-
 // class principal
 class PokemonTrainerApp {
-  final DatabaseService _db = DatabaseService();
-
-  User? currentUser;
-
-  Future<void> start() async {
-    await _db.connect();
-
-    while (true) {
-      if (currentUser == null) {
-        welcome();
-        showLoginMenu();
-        break;
-      } else {
-        // showMainMenu();
-        print('show Main Menu');
-        break;
-      }
-    }
-  }
-
 // Mensaje de bienvenido
   void welcome() {
     print('''
@@ -64,10 +41,16 @@ class PokemonTrainerApp {
 ################################################################
 
 ''');
+    showMainMenu();
   }
 
-// Login menu
-  void showLoginMenu() async {
-    print('login menu');
+  // Menu principal metodo
+  void showMainMenu() {
+    print('''
+OPCIONES 👇
+1. Login
+2. Registrar
+
+''');
   }
 }
