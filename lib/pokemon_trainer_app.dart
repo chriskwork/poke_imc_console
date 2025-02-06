@@ -1,4 +1,6 @@
 // class principal
+import 'dart:io';
+
 class PokemonTrainerApp {
 // Mensaje de bienvenido
   void welcome() {
@@ -46,11 +48,18 @@ class PokemonTrainerApp {
 
   // Menu principal metodo
   void showMainMenu() {
+    String? seletedOption;
+
+    // Menu options
     print('''
-OPCIONES 👇
+=== OPCIONES 👇 ===
 1. Login
 2. Registrar
 
 ''');
+
+    seletedOption = stdin.readLineSync() ?? '';
+
+    if (seletedOption == 1) {}
   }
 }
