@@ -3,3 +3,4 @@
 .dart_tool/
 .user.json
 .pokemon-trainer-app-claude.dart
+/lib/user/imc_calc.dart

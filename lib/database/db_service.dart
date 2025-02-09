@@ -27,11 +27,10 @@ class DatabaseService {
       conn = await MySqlConnection.connect(DatabaseConfig.settings);
 
       // Iniciar tablas (Crear las tablas si no existen)
+      // estará abierto despues de hacer registracion o login.
       _initialTables();
     } catch (e) {
       print('Error: Problema con el BD, $e');
-    } finally {
-      await conn.close();
     }
   }
 

@@ -1,5 +1,6 @@
 // class principal
 import 'dart:io';
+import 'package:pokemon_trainer_fitness_app/database/regist_handler.dart';
 
 class PokemonTrainerApp {
 // Mensaje de bienvenido
@@ -60,6 +61,15 @@ class PokemonTrainerApp {
 
     seletedOption = stdin.readLineSync() ?? '';
 
-    if (seletedOption == 1) {}
+    switch (seletedOption) {
+      case '1':
+        print('login()');
+        break;
+      case '':
+        print('Por favor, elige una opción.\n');
+        showMainMenu();
+      default:
+        UserRegistHandler().newUserRegister();
+    }
   }
 }

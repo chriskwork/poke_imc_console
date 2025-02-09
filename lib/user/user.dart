@@ -21,6 +21,7 @@ class User {
         _imc = imc;
 
   // Getter
+  String get password => _password;
   double get height => _height;
   double get weight => _weight;
   double get imc => _imc;

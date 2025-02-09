@@ -14,23 +14,25 @@ class UserRegistHandler {
       stdout.write('(1/4) Crear un nombre que deseas => ');
       username = stdin.readLineSync() ?? '';
       if (username.isEmpty) {
-        print('El nombre no puede ser vacio');
+        print('⚠ El nombre no puede ser vacio');
         continue;
       }
 
       // Check BBDD si el nombre existe
+
       var results = await _db.conn
           .query('SELECT username FROM trainer WHERE username = ?', [username]);
 
       // Si no sale el nombre que esta elegido en resultado de query,
       // ya puede usar el nombre.
       if (results.isEmpty) {
+        print('✔ Puedes usar este nombre');
         isUnique = !isUnique;
-        print('Puedes usar este nombre');
       } else {
-        print('El nombre ya extiste. Elige otro nombre.');
+        print('❌ El nombre ya extiste. Elige otro nombre.');
+        continue;
       }
-    } while (isUnique);
+    } while (!isUnique);
 
     return username;
   }
@@ -81,13 +83,47 @@ class UserRegistHandler {
 
   // Registrar nuevo user a los BBDD
   Future<void> newUserRegister() async {
+    String imcStatus = '';
+
     try {
       await _db.connect();
 
       final user = await newUserRegistInput();
-      print(user);
+
+      var result = await _db.conn.query(
+          'INSERT INTO trainer (username, password) VALUES (?, ?)',
+          [user.username, user.password]);
+
+      final trainerId = result.insertId;
+
+      await _db.conn.query(
+        'INSERT INTO imc (trainer_id, height, weight, imc) VALUES (?, ?, ?, ?)',
+        [trainerId, user.height, user.weight, user.imc],
+      );
+
+      // IMC Rango:
+      // < 18.5 (bajo peso)
+      // 18.5 - 22.9 (normal)
+      // 23 - 24.9 (sobrepeso)
+      // >= 25 (obesidad)
+
+      if (user.imc < 18.5) {
+        imcStatus = 'Bajo Peso';
+      } else if (user.imc < 22.9) {
+        imcStatus = 'Normal';
+      } else if (user.imc < 24.9) {
+        imcStatus = 'Sobrepeso';
+      } else {
+        imcStatus = 'Obesidad';
+      }
+
+      print('\n🙌 ¡Registro completado con éxito!');
+      print(
+          'Tu IMC actual: ${user.imc.toStringAsFixed(1)}, Estado: $imcStatus\n');
     } catch (e) {
       throw Exception('Error, $e');
+    } finally {
+      await _db.conn.close();
     }
   }
 }
