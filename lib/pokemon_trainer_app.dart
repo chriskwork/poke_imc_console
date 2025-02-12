@@ -1,6 +1,7 @@
 // class principal
 import 'dart:io';
 import 'package:pokemon_trainer_fitness_app/database/regist_handler.dart';
+import 'package:pokemon_trainer_fitness_app/database/user_login.dart';
 
 class PokemonTrainerApp {
 // Mensaje de bienvenido
@@ -63,13 +64,14 @@ class PokemonTrainerApp {
 
     switch (seletedOption) {
       case '1':
-        print('login()');
+        UserLogin().login();
         break;
-      case '':
+      case '2':
+        UserRegistHandler().newUserRegister();
+        break;
+      default:
         print('Por favor, elige una opción.\n');
         showMainMenu();
-      default:
-        UserRegistHandler().newUserRegister();
     }
   }
 }

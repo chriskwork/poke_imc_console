@@ -1,7 +1,6 @@
 import 'package:mysql1/mysql1.dart';
 import 'dart:async';
 import 'package:pokemon_trainer_fitness_app/database/db_config.dart';
-import 'package:pokemon_trainer_fitness_app/user/user.dart';
 
 class DatabaseService {
   late MySqlConnection conn;
@@ -56,6 +55,18 @@ class DatabaseService {
         FOREIGN KEY (trainer_id) REFERENCES trainer(trainer_id)
       )''');
 
+    // Crear la tabla [pokemon_stats]
+    await conn.query('''
+        CREATE TABLE IF NOT EXISTS pokemon_stats (
+        pokemon_id int NOT NULL PRIMARY KEY,
+        trainer_id int NOT NULL,
+        pokemon_name varchar(50) NOT NULL,
+        height decimal(5,2) NOT NULL,
+        weight decimal(5,2) NOT NULL,
+        imc decimal(3,1) NOT NULL,
+        FOREIGN KEY (trainer_id) REFERENCES trainer(trainer_id)
+      )''');
+
     // Crear la tabla [user_pokemon]
     await conn.query('''
         CREATE TABLE IF NOT EXISTS user_pokemon (
@@ -67,35 +78,24 @@ class DatabaseService {
         FOREIGN KEY (trainer_id) REFERENCES trainer(trainer_id),
         FOREIGN KEY (pokemon_id) REFERENCES pokemon_stats(pokemon_id)
       )''');
-
-    // Crear la tabla [pokemon_stats]
-    await conn.query('''
-        CREATE TABLE IF NOT EXISTS pokemon_stats (
-        pokemon_id int NOT NULL PRIMARY KEY,
-        trainer_id int NOT NULL,
-        pokemon_name varchar(50) NOT NULL,
-        height decimal(5,2) NOT NULL,
-        weight decimal(5,2) NOT NULL,
-        imc decimal(3,1) NOT NULL
-      )''');
   }
 
-  Future<User?> loginUser(String username, String password) async {
-    var results = await conn.query(
-      'SELECT username, password FROM trainer WHERE username = ? AND password = ?',
-      [username, password],
-    );
+  // Future<User?> loginUser(String username, String password) async {
+  //   var results = await conn.query(
+  //     'SELECT username, password FROM trainer WHERE username = ? AND password = ?',
+  //     [username, password],
+  //   );
 
-    if (results.isNotEmpty) {
-      var row = results.first;
-      return User(
-        username: row['username'],
-        password: row['password'],
-        height: row['height'],
-        weight: row['weight'],
-        imc: row['imc'],
-      );
-    }
-    return null;
-  }
+  //   if (results.isNotEmpty) {
+  //     var row = results.first;
+  //     return User(
+  //       username: row['username'],
+  //       password: row['password'],
+  //       height: row['height'],
+  //       weight: row['weight'],
+  //       imc: row['imc'],
+  //     );
+  //   }
+  //   return null;
+  // }
 }
