@@ -61,21 +61,4 @@ class User {
       throw Exception('La contraseña incorrecta.');
     }
   }
-
-  // Calcular el IMC de usuario
-  double imcCalculator() {
-    double userImc = _weight / ((_height / 100) * (_height / 100));
-    return double.parse(userImc.toStringAsFixed(1));
-  }
-
-  // Map data de usuario para el BBDD.
-  Map<String, dynamic> userMap() {
-    return {
-      'username': username,
-      'password': _password,
-      'height': _height,
-      'weight': _weight,
-      'imc': _imc,
-    };
-  }
 }

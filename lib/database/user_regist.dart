@@ -42,7 +42,7 @@ class UserRegistHandler {
     User userInfo;
 
     try {
-      print('=== Registrar como Trainer ===');
+      print('=== Registrar como Trainer === \n');
 
       String username = await checkUniqueName();
 
@@ -119,7 +119,7 @@ class UserRegistHandler {
 
       print('\n🙌 ¡Registro completado con éxito!');
       print(
-          'Tu IMC actual: ${user.imc.toStringAsFixed(1)}, Estado: $imcStatus\n');
+          'Tu IMC actual: ${user.imc.toStringAsFixed(1)}, Estado: $imcStatus \n');
     } catch (e) {
       throw Exception('Error, $e');
     } finally {

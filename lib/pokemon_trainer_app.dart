@@ -1,6 +1,3 @@
-// class principal
-import 'dart:io';
-import 'package:pokemon_trainer_fitness_app/database/regist_handler.dart';
 import 'package:pokemon_trainer_fitness_app/database/user_login.dart';
 
 class PokemonTrainerApp {
@@ -45,33 +42,7 @@ class PokemonTrainerApp {
 ################################################################
 
 ''');
-    showMainMenu();
-  }
 
-  // Menu principal metodo
-  void showMainMenu() {
-    String? seletedOption;
-
-    // Menu options
-    print('''
-=== OPCIONES 👇 ===
-1. Login
-2. Registrar
-
-''');
-
-    seletedOption = stdin.readLineSync() ?? '';
-
-    switch (seletedOption) {
-      case '1':
-        UserLogin().login();
-        break;
-      case '2':
-        UserRegistHandler().newUserRegister();
-        break;
-      default:
-        print('Por favor, elige una opción.\n');
-        showMainMenu();
-    }
+    UserLogin().showInitMenu();
   }
 }
