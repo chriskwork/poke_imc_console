@@ -28,7 +28,7 @@ class UserLogin {
           'SELECT username, password FROM trainer WHERE username = ? AND password = ?',
           [inputUsername, _inputPassword]).then((results) {
         if (results.isNotEmpty) {
-          print('✔ Bienvenido, $inputUsername \n');
+          print('\n✔ Bienvenido, $inputUsername \n');
           isLogin = true;
           showMainMenu();
         } else {
@@ -45,7 +45,7 @@ class UserLogin {
 
   void logout() {
     isLogin = false;
-    print('👋 Hasta luego, $inputUsername \n');
+    print('\n👋 Hasta luego, $inputUsername \n');
   }
 
   // Menu principal. (!login)
@@ -55,15 +55,17 @@ class UserLogin {
     // Menu options
     print('=== OPCIONES 👇 ===');
     print('1. Login');
-    print('2. Registrar');
+    print('2. Registrar\n');
 
     seletedOption = stdin.readLineSync() ?? '';
 
     switch (seletedOption) {
       case '1':
+        print('🔄 Cargando...');
         UserLogin().login();
         break;
       case '2':
+        print('🔄 Cargando...');
         UserRegistHandler().newUserRegister();
         break;
       default:
@@ -87,6 +89,7 @@ class UserLogin {
     switch (seletedOption) {
       case '1':
         print('Ver mi Pokémon');
+
         break;
       case '2':
         print('ver mi imc');

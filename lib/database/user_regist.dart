@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:pokemon_trainer_fitness_app/database/db_service.dart';
+import 'package:pokemon_trainer_fitness_app/database/user_login.dart';
 import 'package:pokemon_trainer_fitness_app/user/user.dart';
 
 class UserRegistHandler {
@@ -120,6 +121,8 @@ class UserRegistHandler {
       print('\n🙌 ¡Registro completado con éxito!');
       print(
           'Tu IMC actual: ${user.imc.toStringAsFixed(1)}, Estado: $imcStatus \n');
+      print('Tu pokémon es Charmander(IMC 19.2). ¡Buena suerte! \n');
+      UserLogin().showMainMenuHandler();
     } catch (e) {
       throw Exception('Error, $e');
     } finally {
