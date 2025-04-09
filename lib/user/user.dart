@@ -5,7 +5,8 @@ class User {
   final String _password;
   double _height;
   double _weight;
-  final double _imc;
+  double _imc;
+  String imcStatus = "";
 
   // Constructor
   User({
@@ -43,7 +44,33 @@ class User {
     }
   }
 
-  set imc(double value) {}
+  set imc(double value) {
+    String msgTemplate = 'Tu IMC es $imc :';
+
+    if (value > 0) {
+      _imc = imc;
+
+      if (value < 18.5) {
+        imcStatus = '$msgTemplate Bajo de peso.';
+      } else if (value < 24.9) {
+        imcStatus = '$msgTemplate Peso normal.';
+      } else if (value < 29.9) {
+        imcStatus = '$msgTemplate Sobrepeso.';
+      } else if (value < 34.9) {
+        imcStatus = '$msgTemplate Obesidad ligera.';
+      } else if (value < 39.9) {
+        imcStatus = '$msgTemplate Obesidad';
+      } else {
+        imcStatus = '$msgTemplate Obesidad EXTREMA';
+      }
+    } else {
+      throw Exception('El valor no está válido.');
+    }
+  }
+
+  void printImcStatus() {
+    print(imcStatus);
+  }
 
   // Verificar la contraseña
   bool verifyPassword(String inputPassword) {
