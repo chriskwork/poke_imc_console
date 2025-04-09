@@ -89,7 +89,6 @@ class UserLogin {
     switch (seletedOption) {
       case '1':
         print('Ver mi Pokémon');
-
         break;
       case '2':
         print('ver mi imc');
