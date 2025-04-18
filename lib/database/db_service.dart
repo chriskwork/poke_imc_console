@@ -59,6 +59,7 @@ class DatabaseService {
         height decimal(5,2) NOT NULL,
         weight decimal(5,2) NOT NULL,
         imc decimal(3,1) NOT NULL,
+        imc_status varchar(10) NOT NULL,
         recorded_at timestamp DEFAULT CURRENT_TIMESTAMP,
         FOREIGN KEY (trainer_id) REFERENCES trainer(trainer_id)
       )''');

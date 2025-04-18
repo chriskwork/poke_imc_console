@@ -51,29 +51,29 @@ class UserRegistHandler {
       String password = stdin.readLineSync() ?? '';
       if (password.isEmpty) throw Exception('La contraseña es obligatoria');
 
-      stdout.write('(3/4) Introduce tu altura(metro) => ');
+      stdout.write('(3/4) Introduce tu altura(*metro) => ');
       double height = double.tryParse(
             stdin.readLineSync()!.trim().replaceAll(',', '.'),
           ) ??
           0;
-      if (height <= 0) throw Exception('El valor no está validad');
+      if (height <= 0 || height >= 100) {
+        throw Exception('El valor no está validad');
+      }
 
-      stdout.write('(4/4) Introduce tu peso(kg) => ');
+      stdout.write('(4/4) Introduce tu peso(*kg) => ');
       double weight = double.tryParse(
             stdin.readLineSync()!.trim().replaceAll(',', '.'),
           ) ??
           0;
-      if (weight <= 0) throw Exception('El valor no está validad');
-
-      // Calcular IMC
-      double userImc = weight / (height * height);
+      if (weight <= 0) {
+        throw Exception('El valor no está validad');
+      }
 
       userInfo = User(
         username: username,
         password: password,
         height: height,
         weight: weight,
-        imc: userImc,
       );
     } catch (e) {
       throw Exception('Error, $e');
@@ -97,32 +97,27 @@ class UserRegistHandler {
 
       final trainerId = result.insertId;
 
-      await _db.conn.query(
-        'INSERT INTO imc (trainer_id, height, weight, imc) VALUES (?, ?, ?, ?)',
-        [trainerId, user.height, user.weight, user.imc],
-      );
+      // Calcular IMC
+      double userImc = user.weight / (user.height * user.height);
 
-      // IMC Rango:
-      // < 18.5 (bajo peso)
-      // 18.5 - 22.9 (normal)
-      // 23 - 24.9 (sobrepeso)
-      // >= 25 (obesidad)
-
-      if (user.imc < 18.5) {
+      if (userImc < 18.5) {
         imcStatus = 'Bajo Peso';
-      } else if (user.imc < 22.9) {
+      } else if (userImc < 22.9) {
         imcStatus = 'Normal';
-      } else if (user.imc < 24.9) {
+      } else if (userImc < 24.9) {
         imcStatus = 'Sobrepeso';
       } else {
         imcStatus = 'Obesidad';
       }
 
+      await _db.conn.query(
+        'INSERT INTO imc (trainer_id, height, weight, imc, imc_status) VALUES (?, ?, ?, ?, ?)',
+        [trainerId, user.height, user.weight, userImc, imcStatus],
+      );
+
       print('\n🙌 ¡Registro completado con éxito!');
-      print(
-          'Tu IMC actual: ${user.imc.toStringAsFixed(1)}, Estado: $imcStatus \n');
-      print('Tu pokémon es Charmander(IMC 19.2). ¡Buena suerte! \n');
-      UserLogin().showMainMenuHandler();
+
+      UserLogin().showMainMenu();
     } catch (e) {
       throw Exception('Error, $e');
     } finally {

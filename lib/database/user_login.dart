@@ -70,7 +70,7 @@ class UserLogin {
         break;
       default:
         print('Por favor, elige una opción.\n');
-        showMainMenuHandler();
+        showInitMenu();
     }
   }
 
@@ -98,17 +98,7 @@ class UserLogin {
         break;
       default:
         print('Por favor, elige una opción.\n');
-        showMainMenuHandler();
-    }
-  }
-
-  // Controlador de menu principal
-  // muestra el menu diferente depende del usuario esta logeado o no.
-  void showMainMenuHandler() {
-    if (isLogin) {
-      showMainMenu();
-    } else {
-      showInitMenu();
+        showMainMenu();
     }
   }
 }
