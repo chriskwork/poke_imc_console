@@ -1,4 +1,6 @@
 import 'dart:io';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 import 'package:pokemon_trainer_fitness_app/database/db_service.dart';
 import 'package:pokemon_trainer_fitness_app/database/user_login.dart';
 import 'package:pokemon_trainer_fitness_app/user/user.dart';
@@ -84,8 +86,6 @@ class UserRegistHandler {
 
   // Registrar nuevo user a los BBDD
   Future<void> newUserRegister() async {
-    String imcStatus = '';
-
     try {
       await _db.connect();
 
@@ -100,28 +100,94 @@ class UserRegistHandler {
       // Calcular IMC
       double userImc = user.weight / (user.height * user.height);
 
-      if (userImc < 18.5) {
-        imcStatus = 'Bajo Peso';
-      } else if (userImc < 22.9) {
-        imcStatus = 'Normal';
-      } else if (userImc < 24.9) {
-        imcStatus = 'Sobrepeso';
-      } else {
-        imcStatus = 'Obesidad';
-      }
+      String imcStatus = imcStatusLogic(userImc);
 
       await _db.conn.query(
         'INSERT INTO imc (trainer_id, height, weight, imc, imc_status) VALUES (?, ?, ?, ?, ?)',
         [trainerId, user.height, user.weight, userImc, imcStatus],
       );
 
-      print('\n🙌 ¡Registro completado con éxito!');
+      print('\n🙌 ¡Registro completado con éxito! \n');
 
+      await initPokemonData();
       UserLogin().showMainMenu();
     } catch (e) {
       throw Exception('Error, $e');
     } finally {
       await _db.conn.close();
     }
+  }
+
+  Future<void> initPokemonData() async {
+    try {
+      var result =
+          await _db.conn.query('SELECT COUNT(*) as total FROM pokemon_stats');
+      int count = result.first['total'] ?? 0;
+
+      if (count > 0) return;
+
+      // Traer los datos de la API
+      print('🔄 Inicializando datos de Pokémon...');
+
+      for (int i = 1; i <= 100; i++) {
+        final res =
+            await http.get(Uri.parse('https://pokeapi.co/api/v2/pokemon/$i'));
+
+        if (res.statusCode == 200) {
+          final data = json.decode(res.body);
+
+          // Obtener IMC de Pokemon
+          double pokemonHeight = data['height'] / 10;
+          double pokemonWeight = data['weight'] / 10;
+          double pokemonImc = pokemonWeight / (pokemonHeight * pokemonHeight);
+
+          String pokemonImcStatus = imcStatusLogic(pokemonImc);
+
+          await _db.conn.query(
+              'INSERT INTO pokemon_stats (pokemon_id, pokemon_name, height, weight, imc, imc_status) VALUES (?, ?, ?, ?, ?, ?)',
+              [
+                data['id'],
+                data['name'],
+                pokemonHeight,
+                pokemonWeight,
+                pokemonImc,
+                pokemonImcStatus
+              ]);
+        }
+
+        if (i % 10 == 0) {
+          print('🔄 Cargando $i%...');
+        }
+      }
+
+      print('\n');
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  // Future<void> pickUserPokemon() async {
+  //   try {
+  //     _db.conn.query('');
+  //   } catch (e) {
+  //     throw Exception('$e');
+  //   }
+  // }
+
+  String imcStatusLogic(double pokemonImc) {
+    var pokemonImcStatus = '';
+
+    // Clasificar estado del IMC
+    if (pokemonImc < 18.5) {
+      pokemonImcStatus = 'Bajo Peso';
+    } else if (pokemonImc < 22.9) {
+      pokemonImcStatus = 'Normal';
+    } else if (pokemonImc < 24.9) {
+      pokemonImcStatus = 'Sobrepeso';
+    } else {
+      pokemonImcStatus = 'Obesidad';
+    }
+
+    return pokemonImcStatus;
   }
 }

@@ -1,5 +1,3 @@
-import 'dart:convert';
-import 'package:http/http.dart' as http;
 import 'package:mysql1/mysql1.dart';
 import 'dart:async';
 import 'package:pokemon_trainer_fitness_app/database/db_config.dart';
@@ -7,6 +5,7 @@ import 'package:pokemon_trainer_fitness_app/database/db_config.dart';
 class DatabaseService {
   late MySqlConnection conn;
   bool isInit = false;
+
   // Conectar a BBDD
   Future<void> connect() async {
     if (!isInit) {
@@ -30,8 +29,8 @@ class DatabaseService {
 
         // Iniciar tablas (Crear las tablas si no existen)
         // estará abierto despues de hacer registracion o login.
+        print('🔄 Creando base de datos...\n');
         await _initialTables();
-        await initPokemonData();
         isInit = true;
       } catch (e) {
         print('Error: connect(), $e');
@@ -59,7 +58,7 @@ class DatabaseService {
         height decimal(5,2) NOT NULL,
         weight decimal(5,2) NOT NULL,
         imc decimal(3,1) NOT NULL,
-        imc_status varchar(10) NOT NULL,
+        imc_status varchar(15) NOT NULL,
         recorded_at timestamp DEFAULT CURRENT_TIMESTAMP,
         FOREIGN KEY (trainer_id) REFERENCES trainer(trainer_id)
       )''');
@@ -71,7 +70,8 @@ class DatabaseService {
         pokemon_name varchar(50) NOT NULL,
         height decimal(5,2) NOT NULL,
         weight decimal(5,2) NOT NULL,
-        imc decimal(3,1) NOT NULL
+        imc decimal(3,1) NOT NULL,
+        imc_status varchar(15) NOT NULL
       )''');
 
     // Crear la tabla [user_pokemon]
@@ -85,49 +85,5 @@ class DatabaseService {
         FOREIGN KEY (trainer_id) REFERENCES trainer(trainer_id),
         FOREIGN KEY (pokemon_id) REFERENCES pokemon_stats(pokemon_id)
       )''');
-  }
-
-  // Registrar los datos de pokemon
-  Future<void> initPokemonData() async {
-    try {
-      var result = await conn.query('SELECT COUNT(*) FROM pokemon_stats');
-      int count = result.first['count'] ?? 0;
-
-      if (count > 0) {
-        print('✔ Los datos de Pokémon ya están inicializados');
-        return;
-      }
-
-      // Traer los datos de la API
-      // print('🔄 Inicializando datos de Pokémon...');
-
-      for (int i = 1; i <= 151; i++) {
-        final res =
-            await http.get(Uri.parse('https://pokeapi.co/api/v2/pokemon/$i'));
-
-        if (res.statusCode == 200) {
-          final data = json.decode(res.body);
-
-          // Obtener IMC de Pokemon
-          double pokemonHeight = data['height'] / 10;
-          double pokemonWeight = data['weight'] / 10;
-          double pokemonImc = pokemonWeight / (pokemonHeight * pokemonHeight);
-
-          await conn.query(
-              'INSERT INTO pokemon_stats (pokemon_id, pokemon_name, height, weight, imc) VALUES (?, ?, ?, ?, ?)',
-              [
-                data['id'],
-                data['name'],
-                pokemonHeight,
-                pokemonWeight,
-                pokemonImc
-              ]);
-        }
-      }
-
-      // print('✨ Inicialización de Pokémon completada');
-    } catch (e) {
-      print('');
-    }
   }
 }

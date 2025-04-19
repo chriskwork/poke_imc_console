@@ -17,11 +17,19 @@ class UserLogin {
       do {
         stdout.write('Nombre de Trainer: ');
         inputUsername = stdin.readLineSync() ?? '';
+        if (inputUsername == '0') {
+          print('\n');
+          showInitMenu();
+        }
       } while (inputUsername.isEmpty);
 
       do {
         stdout.write('Contraseña: ');
         _inputPassword = stdin.readLineSync() ?? '';
+        if (_inputPassword == '0') {
+          print('\n');
+          showInitMenu();
+        }
       } while (_inputPassword.isEmpty);
 
       await _db.conn.query(
@@ -32,7 +40,8 @@ class UserLogin {
           isLogin = true;
           showMainMenu();
         } else {
-          print('❌ El nombre de usuario o la contraseña no son correctos \n');
+          print(
+              '❌ El nombre de usuario o la contraseña no son correctos. \n Para volver al Menú, pulsa 0.');
           login();
         }
       });
@@ -68,6 +77,9 @@ class UserLogin {
         print('🔄 Cargando...');
         UserRegistHandler().newUserRegister();
         break;
+      case '0':
+        showInitMenu();
+        break;
       default:
         print('Por favor, elige una opción.\n');
         showInitMenu();
@@ -91,7 +103,6 @@ class UserLogin {
         print('Ver mi Pokémon');
         break;
       case '2':
-        print('ver mi imc');
         break;
       case '3':
         UserLogin().logout();
