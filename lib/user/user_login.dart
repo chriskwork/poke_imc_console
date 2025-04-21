@@ -1,6 +1,6 @@
 import 'dart:io';
 import 'package:pokemon_trainer_fitness_app/database/db_service.dart';
-import 'package:pokemon_trainer_fitness_app/database/user_regist.dart';
+import 'package:pokemon_trainer_fitness_app/user/user_regist.dart';
 
 class UserLogin {
   final DatabaseService _db = DatabaseService();
@@ -19,7 +19,9 @@ class UserLogin {
         inputUsername = stdin.readLineSync() ?? '';
         if (inputUsername == '0') {
           print('\n');
+          inputUsername = '';
           showInitMenu();
+          continue;
         }
       } while (inputUsername.isEmpty);
 
@@ -28,7 +30,9 @@ class UserLogin {
         _inputPassword = stdin.readLineSync() ?? '';
         if (_inputPassword == '0') {
           print('\n');
+          _inputPassword = '';
           showInitMenu();
+          continue;
         }
       } while (_inputPassword.isEmpty);
 
@@ -52,8 +56,16 @@ class UserLogin {
     }
   }
 
-  void logout() {
-    isLogin = false;
+  void logout() async {
+    if (isLogin) {
+      isLogin = false;
+      try {
+        await _db.conn.close();
+      } catch (e) {
+        print('⚠️ Error al cerrar la conexión: $e');
+      }
+    }
+
     print('\n👋 Hasta luego, $inputUsername \n');
   }
 
@@ -103,6 +115,7 @@ class UserLogin {
         print('Ver mi Pokémon');
         break;
       case '2':
+        print('ver mi imc');
         break;
       case '3':
         UserLogin().logout();

@@ -2,7 +2,7 @@ import 'dart:io';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:pokemon_trainer_fitness_app/database/db_service.dart';
-import 'package:pokemon_trainer_fitness_app/database/user_login.dart';
+import 'package:pokemon_trainer_fitness_app/user/user_login.dart';
 import 'package:pokemon_trainer_fitness_app/user/user.dart';
 
 class UserRegistHandler {

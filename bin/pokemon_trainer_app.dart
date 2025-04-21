@@ -1,4 +1,4 @@
-import 'package:pokemon_trainer_fitness_app/database/user_login.dart';
+import 'package:pokemon_trainer_fitness_app/user/user_login.dart';
 
 class PokemonTrainerApp {
 // Mensaje de bienvenido

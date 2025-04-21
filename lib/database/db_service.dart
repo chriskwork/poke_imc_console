@@ -29,7 +29,7 @@ class DatabaseService {
 
         // Iniciar tablas (Crear las tablas si no existen)
         // estará abierto despues de hacer registracion o login.
-        print('🔄 Creando base de datos...\n');
+
         await _initialTables();
         isInit = true;
       } catch (e) {
