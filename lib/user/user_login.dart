@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:pokemon_trainer_fitness_app/database/db_service.dart';
 import 'package:pokemon_trainer_fitness_app/user/user_regist.dart';
+import 'package:pokemon_trainer_fitness_app/user/user_session.dart';
 
 class UserLogin {
   final DatabaseService _db = DatabaseService();
@@ -36,19 +37,19 @@ class UserLogin {
         }
       } while (_inputPassword.isEmpty);
 
-      await _db.conn.query(
-          'SELECT username, password FROM trainer WHERE username = ? AND password = ?',
-          [inputUsername, _inputPassword]).then((results) {
-        if (results.isNotEmpty) {
-          print('\n✔ Bienvenido, $inputUsername \n');
-          isLogin = true;
-          showMainMenu();
-        } else {
-          print(
-              '❌ El nombre de usuario o la contraseña no son correctos. \n Para volver al Menú, pulsa 0.');
-          login();
-        }
-      });
+      var result = await _db.conn.query(
+        'SELECT trainer_id FROM trainer WHERE username = ? AND password = ?',
+        [inputUsername, _inputPassword],
+      );
+
+      if (result.isNotEmpty) {
+        final row = result.first;
+        UserSession.trainerId = row['trainer_id'];
+        UserSession.userName = inputUsername;
+
+        print('\n✔ Bienvenido, $inputUsername \n');
+        showMainMenu();
+      }
     } catch (e) {
       throw Exception('Error: Problema con el BD, $e');
     } finally {
@@ -56,20 +57,7 @@ class UserLogin {
     }
   }
 
-  void logout() async {
-    if (isLogin) {
-      isLogin = false;
-      try {
-        await _db.conn.close();
-      } catch (e) {
-        print('⚠️ Error al cerrar la conexión: $e');
-      }
-    }
-
-    print('\n👋 Hasta luego, $inputUsername \n');
-  }
-
-  // Menu principal. (!login)
+  // Menu principal.
   void showInitMenu() {
     String? seletedOption;
 
@@ -98,7 +86,7 @@ class UserLogin {
     }
   }
 
-  // Menu principal. (login)
+  // Menu principal. (login screen)
   void showMainMenu() {
     String? seletedOption;
 
@@ -124,5 +112,22 @@ class UserLogin {
         print('Por favor, elige una opción.\n');
         showMainMenu();
     }
+  }
+
+  // User logout method
+  void logout() async {
+    if (isLogin) {
+      isLogin = false;
+      try {
+        await _db.conn.close();
+      } catch (e) {
+        print('⚠️ Error al cerrar la conexión: $e');
+      }
+
+      // Inicializar session ID de usuario
+      UserSession.clearSession();
+    }
+
+    print('\n👋 Hasta luego, $inputUsername \n');
   }
 }
