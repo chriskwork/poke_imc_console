@@ -4,6 +4,7 @@ import 'package:http/http.dart' as http;
 import 'package:pokemon_trainer_fitness_app/database/db_service.dart';
 import 'package:pokemon_trainer_fitness_app/user/user_login.dart';
 import 'package:pokemon_trainer_fitness_app/user/user.dart';
+import 'package:pokemon_trainer_fitness_app/user/user_session.dart';
 
 class UserRegistHandler {
   final DatabaseService _db = DatabaseService();
@@ -97,13 +98,18 @@ class UserRegistHandler {
 
       final trainerId = result.insertId;
 
+      // Coger user ID para servir sus datos
+      UserSession.trainerId = trainerId;
+      UserSession.userName = user.username;
+
       // Calcular IMC
       double userImc = user.weight / (user.height * user.height);
 
       String imcStatus = imcStatusLogic(userImc);
 
+      // Guardar IMC en BBDD
       await _db.conn.query(
-        'INSERT INTO imc (trainer_id, height, weight, imc, imc_status) VALUES (?, ?, ?, ?, ?)',
+        'INSERT INTO user_imc (trainer_id, height, weight, imc, imc_status) VALUES (?, ?, ?, ?, ?)',
         [trainerId, user.height, user.weight, userImc, imcStatus],
       );
 
@@ -118,6 +124,8 @@ class UserRegistHandler {
     }
   }
 
+  // Conctar a pokeAPI y traer, guardar los datos en BBDD
+  // usaré solo 100 pokemones
   Future<void> initPokemonData() async {
     try {
       var result =
@@ -165,14 +173,6 @@ class UserRegistHandler {
       print(e);
     }
   }
-
-  // Future<void> pickUserPokemon() async {
-  //   try {
-  //     _db.conn.query('');
-  //   } catch (e) {
-  //     throw Exception('$e');
-  //   }
-  // }
 
   String imcStatusLogic(double pokemonImc) {
     var pokemonImcStatus = '';

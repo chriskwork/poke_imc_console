@@ -52,12 +52,12 @@ class DatabaseService {
 
     // Crear la tabla [imc]
     await conn.query('''
-        CREATE TABLE IF NOT EXISTS imc (
+        CREATE TABLE IF NOT EXISTS user_imc (
         record_id int NOT NULL AUTO_INCREMENT PRIMARY KEY,
         trainer_id int NOT NULL,
         height decimal(5,2) NOT NULL,
         weight decimal(5,2) NOT NULL,
-        imc decimal(3,1) NOT NULL,
+        imc decimal(5,2) NOT NULL,
         imc_status varchar(15) NOT NULL,
         recorded_at timestamp DEFAULT CURRENT_TIMESTAMP,
         FOREIGN KEY (trainer_id) REFERENCES trainer(trainer_id)
@@ -70,7 +70,7 @@ class DatabaseService {
         pokemon_name varchar(50) NOT NULL,
         height decimal(5,2) NOT NULL,
         weight decimal(5,2) NOT NULL,
-        imc decimal(3,1) NOT NULL,
+        imc decimal(5,2) NOT NULL,
         imc_status varchar(15) NOT NULL
       )''');
 

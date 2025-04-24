@@ -17,7 +17,7 @@ class UserLogin {
 
     try {
       do {
-        stdout.write('Nombre de Trainer: ');
+        stdout.write('👤 Nombre de Trainer: ');
         inputUsername = stdin.readLineSync() ?? '';
         if (inputUsername == '0') {
           print('\n');
@@ -28,7 +28,7 @@ class UserLogin {
       } while (inputUsername.isEmpty);
 
       do {
-        stdout.write('Contraseña: ');
+        stdout.write('🔒 Contraseña: ');
         _inputPassword = stdin.readLineSync() ?? '';
         if (_inputPassword == '0') {
           print('\n');
@@ -49,12 +49,12 @@ class UserLogin {
         UserSession.userName = inputUsername;
 
         print('\n✔ Bienvenido, $inputUsername \n');
-        showMainMenu();
+        await showMainMenu();
+      } else {
+        await _db.conn.close();
       }
     } catch (e) {
-      throw Exception('Error: Problema con el BD, $e');
-    } finally {
-      await _db.conn.close();
+      throw Exception('Error: Problema con la conexión, $e');
     }
   }
 
@@ -95,7 +95,7 @@ class UserLogin {
       print('2. Ver mi IMC');
       print('3. Salir');
 
-      stdout.write('Elige una opción');
+      stdout.write('\nElige una opción: ');
       String option = stdin.readLineSync() ?? '';
 
       if (option == '1') {
@@ -104,8 +104,10 @@ class UserLogin {
         if (UserSession.trainerId != null) {
           UserIMCHandler userIMC = UserIMCHandler(_db.conn);
           await userIMC.showMyIMC(UserSession.trainerId!);
+          continue;
         } else {
           print('⚠ No estás logueado.');
+          break;
         }
       } else if (option == '3') {
         logout();
