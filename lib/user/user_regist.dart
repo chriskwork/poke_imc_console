@@ -116,11 +116,9 @@ class UserRegistHandler {
       print('\n🙌 ¡Registro completado con éxito! \n');
 
       await initPokemonData();
-      UserLogin().showMainMenu();
+      await UserLogin().showMainMenu();
     } catch (e) {
       throw Exception('Error, $e');
-    } finally {
-      await _db.conn.close();
     }
   }
 

@@ -13,7 +13,9 @@ class UserLogin {
   bool isLogin = false;
 
   Future<void> login() async {
-    await _db.connect();
+    if (!_db.isInit) {
+      await _db.connect();
+    }
 
     try {
       do {
@@ -51,7 +53,7 @@ class UserLogin {
         print('\n✔ Bienvenido, $inputUsername \n');
         await showMainMenu();
       } else {
-        await _db.conn.close();
+        throw Exception('Login Error!');
       }
     } catch (e) {
       throw Exception('Error: Problema con la conexión, $e');
@@ -161,5 +163,7 @@ class UserLogin {
     }
 
     print('\n👋 Hasta luego, $inputUsername \n');
+
+    exit(0);
   }
 }
