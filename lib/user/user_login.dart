@@ -106,7 +106,8 @@ class UserLogin {
         if (UserSession.trainerId != null) {
           UserIMCHandler userIMC = UserIMCHandler(_db.conn);
           await userIMC.showMyIMC(UserSession.trainerId!);
-          continue;
+          showMainMenu();
+          break;
         } else {
           print('⚠ No estás logueado.');
           break;
